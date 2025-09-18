@@ -1,0 +1,2 @@
+pydub>=0.25.1
+# ffmpeg must be installed and available in PATH for pydub to work
