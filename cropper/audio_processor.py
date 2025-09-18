@@ -45,12 +45,8 @@ class AudioProcessor:
             if format_ == "mp3":
                 export_args["bitrate"] = "320k"  # High quality for mp3
             elif format_ == "wav":
-                export_args["parameters"] = [
-                    "-ar",
-                    "44100",
-                    "-ac",
-                    "2",
-                ]  # 44.1kHz stereo
+                # Use pydub's set_frame_rate and set_channels for optimal WAV export
+                snippet = snippet.set_frame_rate(44100).set_channels(2)
             snippet.export(output_path, format=format_, **export_args)
             return True
         except Exception as e:

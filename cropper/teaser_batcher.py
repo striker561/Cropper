@@ -34,7 +34,10 @@ class TeaserBatcher:
         logger.info(f"Starting batch processing of {total} tracks...")
         start_time = time.time()
         processed = 0
-        for idx, track in enumerate(tracks, 1):
+
+        # Precompute all paths and filter invalid tracks first for efficiency
+        valid_tracks = []
+        for track in tracks:
             filename = track.get("filename")
             start = track.get("start")
             end = track.get("end")
@@ -44,18 +47,23 @@ class TeaserBatcher:
             input_path = os.path.join(self.input_folder, filename)
             name, ext = os.path.splitext(filename)
             output_path = os.path.join(self.output_folder, f"{name}_teaser{ext}")
+            valid_tracks.append((filename, start, end, input_path, output_path))
+
+        # Process all valid tracks
+        for idx, (filename, start, end, input_path, output_path) in enumerate(
+            valid_tracks, 1
+        ):
             logger.info(
-                f"[{idx}/{total}] Processing: {filename} ({start}s - {end}s)..."
+                f"[{idx}/{len(valid_tracks)}] Processing: {filename} ({start}s - {end}s)..."
             )
-            # Crop and fade the audio, ensuring high quality
             success = self.audio_processor.crop_and_fade(
                 input_path, output_path, start, end
             )
             if success:
-                logger.info(f"Done: {output_path}")
                 processed += 1
             else:
                 logger.error(f"Failed: {filename}")
+
         elapsed = time.time() - start_time
         logger.info(
             f"\nBatch processing complete.\nTracks processed: {processed}/{total}\nTotal time: {elapsed:.2f} seconds\n"
