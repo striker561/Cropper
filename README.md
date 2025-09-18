@@ -26,7 +26,8 @@ Because cropping audio in Audacity made me want to throw my computer out the win
    pip install -r requirements.txt
    ```
 
-   Also install ffmpeg and make sure it's in your PATH. (If you don't, pydub will complain. You have been warned.)
+   **You must also install [ffmpeg](https://ffmpeg.org/download.html) and make sure it's in your PATH.**
+   If you don't, pydub will complain and nothing will work. (Seriously, ffmpeg is required for audio processing!)
 
 2. **Prepare your audio files:**
 
